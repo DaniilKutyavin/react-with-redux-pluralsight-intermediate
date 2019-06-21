@@ -1,4 +1,7 @@
+import { getCourses } from "../../api/courseApi";
+
 const CREATE_COURSE = "CREATE_COURSE";
+const LOAD_COURSES_SUCCESS = "LOAD_COURSES_SUCCESS";
 
 /**
  * @param {object} payload - course object
@@ -8,13 +11,32 @@ export const createCourse = payload => ({
   payload
 });
 
+export const loadCoursesSuccess = courses => ({
+  type: LOAD_COURSES_SUCCESS,
+  payload: courses
+});
+
 const initialState = [];
 
 export default (state = initialState, { type, payload }) => {
   switch (type) {
     case CREATE_COURSE:
       return [...state, { ...payload }];
+    case LOAD_COURSES_SUCCESS:
+      return payload;
     default:
       return state;
   }
 };
+
+export function loadCourses() {
+  return function(dispatch) {
+    return getCourses()
+      .then(courses => {
+        dispatch(loadCoursesSuccess(courses));
+      })
+      .catch(error => {
+        throw error;
+      });
+  };
+}
