@@ -29,6 +29,16 @@ export default (state = initialState, { type, payload }) => {
   }
 };
 
+export const courseSelector = state =>
+  state.course.map(course => {
+    const authors = state.author;
+
+    const author = authors.find(author => author.id === course.authorId) || {};
+    const authorName = author.name;
+
+    return { ...course, authorName };
+  });
+
 export function loadCourses() {
   return function(dispatch) {
     return getCourses()
